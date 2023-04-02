@@ -40,6 +40,10 @@ function getUTMParameters() {
         console.log("set a cook ", key , " ", value);
 
       setCookie(key, value, 30);
+    }else{
+        console.log("should remove cook and replace w latest - now there may be double.  ", key , " ", value);
+        setCookie(key, value, 30);
+
     }
   });
 
@@ -68,3 +72,32 @@ function getUTMParameters() {
     updateCartAttributes(utmData);
   }
   
+
+  // Find the checkout form
+const checkoutForm = document.querySelector('form[action*="/checkout"]');
+
+if (checkoutForm) {
+    console.log("checkoutForm prnt");
+  // Intercept the form submission event and prevent the default behavior
+  checkoutForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    appendCookieToOrderNote();
+  });
+}
+
+function appendCookieToOrderNote() {
+    console.log("appendCookieToOrderNote prnt");
+
+  // Find the order note field
+  const noteField = checkoutForm.querySelector('textarea[name="note"]');
+
+  const cookieValue = getCookie('utm_campaign');
+  console.log("got cook value prnt, ", cookieValue );
+
+  if (cookieValue && noteField) {
+    noteField.value = `${noteField.value} (cookie:${cookieValue})`;
+  }
+  // Submit the form after updating the order note
+  checkoutForm.submit();
+}
+
