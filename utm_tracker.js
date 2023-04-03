@@ -83,7 +83,7 @@ function getUTMParameters() {
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
   
-  const uniqueIdentifier = getCookieTwo('utm_tracker');
+  const uniqueIdentifier = getCookieTwo('utm_campaign');
   const cartToken = getCookieTwo('cart');
   console.log("get uniqueIdentifier ", uniqueIdentifier);
   console.log("get cartToken ", cartToken);
