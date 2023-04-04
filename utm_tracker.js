@@ -111,7 +111,7 @@ function getUTMParameters() {
     console.log("sendDataToServer now");
 
     try {
-      const response = await fetch('https://d877-2603-7000-4340-730a-4e1-d942-4b1d-3906.ngrok.io/api/save_data?shop=honeypotshopapp.myshopify.com&host=aG9uZXlwb3RzaG9wYXBwLm15c2hvcGlmeS5jb20vYWRtaW4', {
+      const response = await fetch('https://4d23-2603-7000-4340-730a-4e1-d942-4b1d-3906.ngrok.io/api/save_data?shop=honeypotshopapp.myshopify.com&host=aG9uZXlwb3RzaG9wYXBwLm15c2hvcGlmeS5jb20vYWRtaW4', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
