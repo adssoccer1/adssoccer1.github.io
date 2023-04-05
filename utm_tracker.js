@@ -88,24 +88,23 @@ function getUTMParameters() {
   console.log("get uniqueIdentifier ", uniqueIdentifier);
   console.log("get cartToken ", cartToken);
 
-  if (uniqueIdentifier && cartToken) {
+  if (uniqueIdentifier){
     console.log("entered condtonal ");
+    // Call checkForCartCookie every 5 seconds to check for new cookies
+    setInterval(checkForCartCookie, 2500);
+    
+    if (cartToken){
 
-    // Proceed to step 5
-    const dataSentFlag = localStorage.getItem('data_sent');
-    console.log("dataSentFlag dataSentFlag ", dataSentFlag);
+        // Proceed to step 5
+        const dataSentFlag = localStorage.getItem('data_sent');
+        console.log("dataSentFlag dataSentFlag ", dataSentFlag);
 
-    if (!dataSentFlag) {
-    // Proceed to step 6
-      sendDataToServer(uniqueIdentifier, cartToken);
+        if (!dataSentFlag) {
+        // Proceed to step 6
+        sendDataToServer(uniqueIdentifier, cartToken);
+        }
     }
 }
-
-    
-  function setLocalStorageFlag() {
-    localStorage.setItem('data_sent', 'true');
-  }
-  
 
   async function sendDataToServer(uniqueIdentifier, cartToken) {
     console.log("sendDataToServer now");
@@ -125,7 +124,6 @@ function getUTMParameters() {
       console.log("sendDataToServer response ", response);
 
       if (response.ok) {
-        // Proceed to step 7
         setLocalStorageFlag();
       } else {
         console.error('Error sending data to the server');
@@ -134,6 +132,19 @@ function getUTMParameters() {
       console.error('Error sending data to the server:', error);
     }
   }  
+
+  function checkForCartCookie() {
+    cartToken = getCookieTwo('cart');
+}
+    
+function setLocalStorageFlag() {
+    localStorage.setItem('data_sent', 'true');
+  }
+  
+
+// Call checkForCartCookie on page load
+window.addEventListener('load', checkForCartCookie);
+
 
   window.addEventListener('beforeunload', () => {
     localStorage.removeItem('data_sent');
