@@ -75,6 +75,7 @@ function getUTMParameters() {
   }
   */
   function getCookieTwo(name) {
+    console.log('getcooktwo called');
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
@@ -82,12 +83,18 @@ function getUTMParameters() {
   
   const uniqueIdentifier = getCookieTwo('utm_campaign');
   let cartToken = getCookieTwo('cart');
-  
+  console.log('uniqueIdentifier set', uniqueIdentifier);
+  console.log('cartToken set', cartToken);
+
   if (uniqueIdentifier) {
+    console.log('uniqueIdentifier condtonal', uniqueIdentifier);
+
     // Create and start the MutationObserver to detect changes to document.cookie
     const observer = new MutationObserver(() => {
       const newCartToken = getCookieTwo('cart');
       if (newCartToken && newCartToken !== cartToken) {
+        console.log('MutationObserver detected change');
+
         cartToken = newCartToken;
         processCartToken(uniqueIdentifier, cartToken);
         observer.disconnect();
@@ -100,11 +107,15 @@ function getUTMParameters() {
     });
   
     if (cartToken) {
+        console.log('cart token detected processcarttoken called');
+
       processCartToken(uniqueIdentifier, cartToken);
     }
   }
   
   async function sendDataToServer(uniqueIdentifier, cartToken) {
+    console.log('sendDataToServer called');
+
     try {
       const response = await fetch('https://6b8f-2603-7000-4340-730a-2866-f7dd-34df-d5d7.ngrok.io/api/save_data?shop=honeypotshopapp.myshopify.com&host=aG9uZXlwb3RzaG9wYXBwLm15c2hvcGlmeS5jb20vYWRtaW4', {
         method: 'POST',
@@ -132,8 +143,12 @@ function getUTMParameters() {
   }
   
   function processCartToken(uniqueIdentifier, cartToken) {
+    console.log('processCartToken called');
+
     const dataSentFlag = localStorage.getItem('data_sent');
     if (!dataSentFlag) {
+        console.log('sendDataToServer called from processCartToken');
+
       sendDataToServer(uniqueIdentifier, cartToken);
     }
   }
