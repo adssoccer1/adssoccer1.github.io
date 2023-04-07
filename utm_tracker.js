@@ -74,10 +74,7 @@ function getUTMParameters() {
     updateCartAttributes(utmData);
   }
   */
-
   function getCookieTwo(name) {
-    console.log("get cook two called ", name);
-
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
@@ -85,32 +82,29 @@ function getUTMParameters() {
   
   const uniqueIdentifier = getCookieTwo('utm_campaign');
   let cartToken = getCookieTwo('cart');
-  console.log("get uniqueIdentifier ", uniqueIdentifier);
-  console.log("get cartToken ", cartToken);
-
-  if (uniqueIdentifier){
-    console.log("entered condtonal ");
-    // Call checkForCartCookie every 5 seconds to check for new cookies
-    const intervalID = setInterval(checkForCartCookie, 2500);
-    
-    if (cartToken){
-
-        // Proceed to step 5
-        const dataSentFlag = localStorage.getItem('data_sent');
-        console.log("dataSentFlag dataSentFlag ", dataSentFlag);
-
-        if (!dataSentFlag) {
-        // Proceed to step 6
-        sendDataToServer(uniqueIdentifier, cartToken);
-        clearInterval(intervalID);
-
-        }
+  
+  if (uniqueIdentifier) {
+    // Create and start the MutationObserver to detect changes to document.cookie
+    const observer = new MutationObserver(() => {
+      const newCartToken = getCookieTwo('cart');
+      if (newCartToken && newCartToken !== cartToken) {
+        cartToken = newCartToken;
+        processCartToken(uniqueIdentifier, cartToken);
+        observer.disconnect();
+      }
+    });
+  
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['cookie'],
+    });
+  
+    if (cartToken) {
+      processCartToken(uniqueIdentifier, cartToken);
     }
-}
-
+  }
+  
   async function sendDataToServer(uniqueIdentifier, cartToken) {
-    console.log("sendDataToServer now");
-
     try {
       const response = await fetch('https://6b8f-2603-7000-4340-730a-2866-f7dd-34df-d5d7.ngrok.io/api/save_data?shop=honeypotshopapp.myshopify.com&host=aG9uZXlwb3RzaG9wYXBwLm15c2hvcGlmeS5jb20vYWRtaW4', {
         method: 'POST',
@@ -123,8 +117,6 @@ function getUTMParameters() {
         }),
       });
   
-      console.log("sendDataToServer response ", response);
-
       if (response.ok) {
         setLocalStorageFlag();
       } else {
@@ -133,21 +125,19 @@ function getUTMParameters() {
     } catch (error) {
       console.error('Error sending data to the server:', error);
     }
-  }  
-
-  function checkForCartCookie() {
-    cartToken = getCookieTwo('cart');
-}
-    
-function setLocalStorageFlag() {
+  }
+  
+  function setLocalStorageFlag() {
     localStorage.setItem('data_sent', 'true');
   }
   
-
-// Call checkForCartCookie on page load
-window.addEventListener('load', checkForCartCookie);
-
-
+  function processCartToken(uniqueIdentifier, cartToken) {
+    const dataSentFlag = localStorage.getItem('data_sent');
+    if (!dataSentFlag) {
+      sendDataToServer(uniqueIdentifier, cartToken);
+    }
+  }
+  
   window.addEventListener('beforeunload', () => {
     localStorage.removeItem('data_sent');
   });
