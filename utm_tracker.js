@@ -3,7 +3,7 @@ console.log("utm_tracker loaded successfully");
 function getUTMParameters() {
     console.log("getUTMParameters called ");
     const urlParams = new URLSearchParams(window.location.search);
-    const utmParameters = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    const utmParameters = ['utm_campaign'];
     const utmData = {};
   
     utmParameters.forEach(param => {
@@ -11,7 +11,7 @@ function getUTMParameters() {
 
       if (urlParams.has(param)) {
         console.log("make sure the utm param is a honey pot param or youll store every utm code");
-        utmData[param] = urlParams.get(param);
+        utmData["honeypotutm"] = urlParams.get(param);
       }
     });
   
@@ -81,7 +81,7 @@ function getUTMParameters() {
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
   
-  const uniqueIdentifier = getCookieTwo('utm_campaign');
+  const uniqueIdentifier = getCookieTwo('honeypotutm');
   let cartToken = getCookieTwo('cart');
   console.log('uniqueIdentifier set', uniqueIdentifier);
   console.log('cartToken set', cartToken);
@@ -146,6 +146,8 @@ function getUTMParameters() {
     console.log('processCartToken called');
 
     const dataSentFlag = localStorage.getItem('data_sent');
+    console.log('data sent flag gotten',dataSentFlag );
+
     if (!dataSentFlag) {
         console.log('sendDataToServer called from processCartToken');
 
