@@ -88,7 +88,7 @@ function getUTMParameters() {
 
   if (uniqueIdentifier) {
     console.log('uniqueIdentifier condtonal', uniqueIdentifier);
-
+    addAllEventListeners();
     // Create and start the MutationObserver to detect changes to document.cookie
     const observer = new MutationObserver(() => {
       const newCartToken = getCookieTwo('cart');
@@ -153,6 +153,55 @@ function getUTMParameters() {
     }
   }
   
+  // Call checkForCartCookie on page load
+  function addAllEventListeners() {
+    console.log('call addAllEventListeners');
+
+    window.addEventListener('load', () => {
+    
+        console.log(' add addEventListener');
+
+        // Approach 1: Use common classes and attributes
+        const addToCartButtons = document.querySelectorAll('.add-to-cart, .addToCart, [name="add"], [type="submit"]');
+        addToCartButtons.forEach(button => {
+        button.addEventListener('click', fetchCartData);
+        });
+    
+        // Approach 2: Search for form elements
+        const addToCartForms = document.querySelectorAll('form[action*="/cart/add"], form[action*="/cart"]');
+        addToCartForms.forEach(form => {
+        form.addEventListener('submit', fetchCartData);
+        });
+    
+        // Approach 3: Dynamic addition of event listeners
+        document.body.addEventListener('click', (event) => {
+        if (event.target.matches('.add-to-cart, .addToCart, [name="add"], [type="submit"]')) {
+            fetchCartData();
+        }
+        });
+        console.log(' done addEventListener');
+
+    });
+   }
+
+  async function fetchCartData() {
+    console.log(' called fetchCartData');
+
+    try {
+      const response = await fetch('/cart.js', { method: 'GET' });
+      const cartData = await response.json();
+      console.log('Cart data:', cartData);
+      // Process cart data as needed
+      if(cartData.cart_token){
+        console.log('cart token not null:', cartData.cart_token);
+        sendDataToServer(uniqueIdentifier, cartData.cart_token);
+      }
+
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    }
+  }
+
   window.addEventListener('beforeunload', () => {
     localStorage.removeItem('data_sent');
   });
