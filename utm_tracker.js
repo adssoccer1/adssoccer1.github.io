@@ -84,14 +84,14 @@ function getUTMParameters() {
   }
   
   const uniqueIdentifier = getCookieTwo('utm_campaign');
-  const cartToken = getCookieTwo('cart');
+  let cartToken = getCookieTwo('cart');
   console.log("get uniqueIdentifier ", uniqueIdentifier);
   console.log("get cartToken ", cartToken);
 
   if (uniqueIdentifier){
     console.log("entered condtonal ");
     // Call checkForCartCookie every 5 seconds to check for new cookies
-    setInterval(checkForCartCookie, 2500);
+    const intervalID = setInterval(checkForCartCookie, 2500);
     
     if (cartToken){
 
@@ -102,6 +102,8 @@ function getUTMParameters() {
         if (!dataSentFlag) {
         // Proceed to step 6
         sendDataToServer(uniqueIdentifier, cartToken);
+        clearInterval(intervalID);
+
         }
     }
 }
@@ -110,7 +112,7 @@ function getUTMParameters() {
     console.log("sendDataToServer now");
 
     try {
-      const response = await fetch('https://5e8c-2603-7000-4340-730a-4e1-d942-4b1d-3906.ngrok.io/api/save_data?shop=honeypotshopapp.myshopify.com&host=aG9uZXlwb3RzaG9wYXBwLm15c2hvcGlmeS5jb20vYWRtaW4', {
+      const response = await fetch('https://6b8f-2603-7000-4340-730a-2866-f7dd-34df-d5d7.ngrok.io/api/save_data?shop=honeypotshopapp.myshopify.com&host=aG9uZXlwb3RzaG9wYXBwLm15c2hvcGlmeS5jb20vYWRtaW4', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
