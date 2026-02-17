@@ -1,0 +1,375 @@
+---
+import "../styles/global.css";
+import { getCollection } from "astro:content";
+import { slugFromId } from "../utils";
+
+// ── Macro Research (external links, sorted newest → oldest) ──
+const macroPosts = [
+  { title: "Systematizing Superforecasting", href: "#", description: "Coming soon.", date: "2025-09-17" },
+  { title: "Exploring Concurrent Necessity in Today's Macro Landscape", href: "https://github.com/adssoccer1/Macro/blob/main/ExploringConcurrentNecessityMacroLandscape.ipynb", description: "Emphasizing long U.S. equities and short U.S. dollar.", date: "2025-08-17" },
+  { title: "Super Cheap Lunch for September Rate Cut Decision", href: "https://github.com/adssoccer1/Macro/blob/main/SuperCheapLunchforSeptRateCutDecision.ipynb", description: "Long 25 bps cut.", date: "2025-08-15" },
+  { title: "Modern Mercantilism Challenge", href: "https://github.com/adssoccer1/Macro/blob/main/Modern%20Mercantilism%20Challenge/Aidan_Sinclair_A_Reflexive_Rebalancing.pdf", description: "Short USD/KRW and long South Korean equities and yield curve steepener.", date: "2025-08-01" },
+  { title: "Exposing Dealer Gamma Exposure", href: "https://github.com/adssoccer1/Macro/blob/main/ExposingDealerGammaExposure.ipynb", description: "Dealer gamma positioning and its market impact.", date: "2025-04-14" },
+  { title: "Good Calls in the Eye of the Storm", href: "https://github.com/adssoccer1/Macro/blob/main/GoodCallsintheEyeoftheStorm.ipynb", description: "Flat SOFR Z5 and modestly long U.S. equities.", date: "2025-04-11" },
+  { title: "Reiterating 3–5 Fed Cuts over the Next 12–14 Months", href: "https://github.com/adssoccer1/Macro/blob/main/Reiterating3to5FedCuts.ipynb", description: "Long SOFR Z5.", date: "2025-02-28" },
+  { title: "Thinking Through Balance of Payments Pressures", href: "https://github.com/adssoccer1/Macro/blob/main/BalanceOfPaymentsThoughts.ipynb", description: "Balance of payments dynamics and capital flow pressures.", date: "2025-02-18" },
+  { title: "How to Track U.S. Debt and the Foreigners Who Own It", href: "https://github.com/adssoccer1/Macro/blob/main/TrackingUSDebtAndTheForeignersWhoOwnIt.ipynb", description: "Tracking foreign holders of U.S. Treasury debt.", date: "2025-02-08" },
+  { title: "Monitoring Bank Balance Sheets", href: "https://github.com/adssoccer1/Macro/blob/main/MonitoringBankBalanceSheets.ipynb", description: "Bank balance sheet composition and lending conditions.", date: "2025-01-28" },
+  { title: "How Volatility Was Killed in 2023", href: "https://github.com/adssoccer1/Macro/blob/main/2023DeathOfVol.ipynb", description: "Structural forces that compressed realized and implied volatility.", date: "2025-01-19" },
+  { title: "Liquidity Injections", href: "https://github.com/adssoccer1/Macro/blob/main/LiquidityInjections.ipynb", description: "Central bank liquidity operations and their market transmission.", date: "2025-01-10" },
+  { title: "Monitoring Dollar Strength as a Potential Catalyst for a U.S. Equity Selloff", href: "https://github.com/adssoccer1/Macro/blob/main/DollarStrengthLeavesEquitiesVulnerable.ipynb", description: "Short U.S. dollar and long SOFR Z5 and flat/short U.S. equities.", date: "2025-01-01" },
+];
+
+// ── System Design (from content collection) ──
+const sdRaw = (await getCollection("system-design"))
+  .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+const systemDesignPosts = sdRaw.map((p) => ({
+  title: p.data.title,
+  href: `/system-design/${slugFromId(p.id)}/`,
+  description: p.data.description ?? "",
+  date: p.data.date ? fmt(p.data.date) : "",
+}));
+
+// ── LeetCode (from content collection) ──
+const lcRaw = await getCollection("leetcode");
+
+const leetCodePosts = lcRaw.map((p) => ({
+  title: p.data.title,
+  href: `/leetcode/${slugFromId(p.id)}/`,
+  description: `${p.data.difficulty} · Time: ${p.data.timeComplexity} · Space: ${p.data.spaceComplexity}`,
+  date: "",
+}));
+
+const tabs = [
+  { id: "macro", label: "Macro Research", posts: macroPosts },
+  { id: "system-design", label: "System Design", posts: systemDesignPosts },
+  { id: "leetcode", label: "LeetCode", posts: leetCodePosts },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={new URL("/", Astro.site)} />
+    <meta name="description" content="Aidan Sinclair — macro research, system design, and algorithms." />
+    <meta property="og:title" content="Aidan Sinclair" />
+    <meta property="og:description" content="Macro research, system design, and algorithms." />
+    <meta property="og:url" content={new URL("/", Astro.site)} />
+    <title>Aidan Sinclair</title>
+  </head>
+  <body>
+    <div class="page">
+      <!-- Header -->
+      <header class="header">
+        <div class="name-group">
+          <img src="/headshot.png" alt="Aidan Sinclair" class="headshot" />
+          <h1 class="name">Aidan Sinclair</h1>
+        </div>
+        <nav class="header-links">
+          <a href="/resume.pdf">Resume</a>
+          <span class="sep">·</span>
+          <a href="https://www.linkedin.com/in/aidan-sinclair/" target="_blank" rel="noopener">LinkedIn</a>
+          <span class="sep">·</span>
+          <a href="https://github.com/adssoccer1" target="_blank" rel="noopener">GitHub</a>
+          <span class="sep">·</span>
+          <a href="https://x.com/aidansinclair_" target="_blank" rel="noopener">Twitter</a>
+        </nav>
+      </header>
+
+      <!-- Intro -->
+      <div class="intro">
+        <p>
+          I am a Senior Software Engineer and macro researcher combining distributed systems engineering with global capital markets analysis. My work centers on policy transmission, liquidity dynamics, dealer positioning, and cross-asset capital flows.
+        </p>
+        <p>
+          Professionally, I've worked across both software and finance (see <a href="/resume.pdf">resume</a>). I've led high-pressure outage remediation efforts, driven long-term backend modernization initiatives across teams, and partnered closely with trading and treasury stakeholders to translate technical systems into real economic outcomes.
+        </p>
+        <p>
+          All my research is publicly time-stamped.
+        </p>
+        <ul class="highlights">
+          <li>Last year I wrote a <a href="https://github.com/adssoccer1/Macro/blob/main/Modern%20Mercantilism%20Challenge/Aidan_Sinclair_A_Reflexive_Rebalancing.pdf" target="_blank" rel="noopener">paper</a> on going long South Korean equities (KOSPI) which are now up over 75% since posting (August 2025).</li>
+          <li>I wrote a paper going long short-term rates into the April tariff volatility <a href="https://github.com/adssoccer1/Macro/blob/main/Reiterating3to5FedCuts.ipynb" target="_blank" rel="noopener">here</a> (Jan and Feb 2025).</li>
+          <li>I wrote <a href="https://github.com/adssoccer1/Macro/blob/main/DollarStrengthLeavesEquitiesVulnerable.ipynb" target="_blank" rel="noopener">here</a> about going short the USD (December 2024 and August 2025).</li>
+        </ul>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        {tabs.map((tab, i) => (
+          <button
+            role="tab"
+            class:list={["tab", { active: i === 0 }]}
+            aria-selected={i === 0 ? "true" : "false"}
+            data-tab={tab.id}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <!-- Tab panels -->
+      {tabs.map((tab, i) => (
+        <ul
+          role="tabpanel"
+          class="post-list"
+          data-panel={tab.id}
+          style={i === 0 ? "" : "display:none"}
+        >
+          {tab.posts.map((post) => (
+            <li class="post-item">
+              <div class="post-left">
+                <a href={post.href} class="post-title">{post.title}</a>
+                <span class="post-desc">{post.description}</span>
+              </div>
+              {post.date && (
+                <div class="post-right">
+                  <span>{post.date}</span>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>(".tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll<HTMLButtonElement>(".tab").forEach((b) => {
+            b.classList.remove("active");
+            b.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          const id = btn.dataset.tab;
+          document.querySelectorAll<HTMLUListElement>(".post-list").forEach((panel) => {
+            panel.style.display = panel.dataset.panel === id ? "" : "none";
+          });
+        });
+      });
+    </script>
+
+    <style>
+      .page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 6rem;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+      }
+
+      .name-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .headshot {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .header-links {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      .header-links a {
+        font-size: 0.875rem;
+        color: #555;
+      }
+
+      .header-links a:hover {
+        color: #1a1a1a;
+      }
+
+      .sep {
+        color: #ccc;
+        font-size: 0.875rem;
+        user-select: none;
+      }
+
+      /* Intro */
+      .intro {
+        margin-top: 2rem;
+        font-size: 0.9375rem;
+        color: #555;
+        line-height: 1.7;
+        max-width: 600px;
+      }
+
+      .intro p {
+        margin-bottom: 0.875rem;
+      }
+
+      .intro a {
+        color: #2563eb;
+        text-decoration: underline;
+      }
+
+      .intro a:hover {
+        color: #1d4ed8;
+      }
+
+      .highlights {
+        list-style: disc;
+        padding-left: 1.25rem;
+        margin-top: 0.5rem;
+      }
+
+      .highlights li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Tabs */
+      .tabs {
+        margin-top: 2.5rem;
+        display: flex;
+        gap: 0.25rem;
+        border-bottom: 1px solid #e5e5e5;
+        padding-bottom: 0;
+      }
+
+      .tab {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.875rem;
+        font-family: inherit;
+        color: #888;
+        cursor: pointer;
+        margin-bottom: -1px;
+        transition: color 0.1s;
+      }
+
+      .tab:hover {
+        color: #1a1a1a;
+      }
+
+      .tab.active {
+        color: #1a1a1a;
+        font-weight: 500;
+        border-bottom-color: #1a1a1a;
+      }
+
+      /* Post list */
+      .post-list {
+        list-style: none;
+        margin-top: 0.75rem;
+        padding: 0;
+      }
+
+      .post-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1.5rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .post-item:last-child {
+        border-bottom: none;
+      }
+
+      .post-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+        min-width: 0;
+      }
+
+      .post-title {
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: #2563eb;
+        text-decoration: underline;
+      }
+
+      .post-title:hover {
+        color: #1d4ed8;
+      }
+
+      .post-desc {
+        font-size: 0.8125rem;
+        color: #888;
+        line-height: 1.5;
+      }
+
+      .post-right {
+        flex-shrink: 0;
+        font-size: 0.8125rem;
+        color: #999;
+        white-space: nowrap;
+        display: flex;
+        gap: 0.35rem;
+      }
+
+      .dot {
+        color: #ccc;
+      }
+
+      /* Mobile */
+      @media (max-width: 600px) {
+        .page {
+          padding: 2.5rem 1.25rem 4rem;
+        }
+
+        .header {
+          flex-direction: column;
+          gap: 0.375rem;
+        }
+
+        .name {
+          font-size: 1.125rem;
+        }
+
+        .tabs {
+          gap: 0;
+        }
+
+        .tab {
+          padding: 0.5rem 0.625rem;
+          font-size: 0.8125rem;
+        }
+
+        .post-item {
+          flex-direction: column;
+          gap: 0.25rem;
+          align-items: flex-start;
+        }
+
+        .post-right {
+          padding-left: 0;
+        }
+      }
+    </style>
+  </body>
+</html>

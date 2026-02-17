@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { slugFromId } from "../../utils";
+
+const posts = (await getCollection("system-design")).sort(
+  (a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0)
+);
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+---
+
+<BaseLayout title="System Design — Aidan Sinclair" description="System design write-ups">
+  <h1 class="heading">System Design</h1>
+  <ul class="list">
+    {posts.map((post) => (
+      <li class="item">
+        <a href={`/system-design/${slugFromId(post.id)}/`}>{post.data.title}</a>
+        {post.data.date && <span class="meta">{fmt(post.data.date)}</span>}
+      </li>
+    ))}
+  </ul>
+  {posts.length === 0 && <p class="empty">No write-ups yet.</p>}
+</BaseLayout>
+
+<style>
+  .heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 1rem;
+  }
+
+  .item a {
+    font-size: 0.9375rem;
+    color: #1a1a1a;
+  }
+
+  .meta {
+    font-size: 0.8125rem;
+    color: #999;
+    white-space: nowrap;
+  }
+
+  .empty {
+    color: #888;
+    font-size: 0.9375rem;
+  }
+</style>

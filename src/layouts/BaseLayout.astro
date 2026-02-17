@@ -1,0 +1,73 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Aidan Sinclair — macro research, system design, and algorithms." } =
+  Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page-inner">
+      <nav class="back-nav">
+        <a href="/">&larr; Aidan Sinclair</a>
+      </nav>
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  .page-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 6rem;
+  }
+
+  .back-nav {
+    margin-bottom: 2rem;
+  }
+
+  .back-nav a {
+    font-size: 0.875rem;
+    color: #888;
+    text-decoration: none;
+  }
+
+  .back-nav a:hover {
+    color: #1a1a1a;
+  }
+
+  main {
+    width: 100%;
+  }
+
+  @media (max-width: 600px) {
+    .page-inner {
+      padding: 1.5rem 1.25rem 4rem;
+    }
+  }
+</style>

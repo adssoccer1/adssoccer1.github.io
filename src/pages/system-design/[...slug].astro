@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { slugFromId } from "../../utils";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("system-design");
+  return posts.map((post) => ({
+    params: { slug: slugFromId(post.id) },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(post);
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+---
+
+<BaseLayout
+  title={`${post.data.title} — Aidan Sinclair`}
+  description={post.data.description}
+>
+  <article>
+    <h1 class="post-heading">{post.data.title}</h1>
+    {post.data.date && (
+      <div class="post-meta">
+        <span>{fmt(post.data.date)}</span>
+        {remarkPluginFrontmatter.readingTime && (
+          <>
+            <span class="dot">·</span>
+            <span>{remarkPluginFrontmatter.readingTime}</span>
+          </>
+        )}
+      </div>
+    )}
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .post-meta {
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.8125rem;
+    color: #888;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .dot {
+    color: #ccc;
+  }
+</style>

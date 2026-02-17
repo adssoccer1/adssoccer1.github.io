@@ -1,0 +1,28 @@
+{
+  "name": "adssoccer1.github.io",
+  "version": "1.0.0",
+  "description": "Personal website and blog",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adssoccer1/adssoccer1.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adssoccer1/adssoccer1.github.io/issues"
+  },
+  "homepage": "https://github.com/adssoccer1/adssoccer1.github.io#readme",
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/sitemap": "^3.7.0",
+    "astro": "^5.17.1",
+    "reading-time": "^1.5.0"
+  }
+}

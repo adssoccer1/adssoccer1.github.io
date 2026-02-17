@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { slugFromId } from "../../utils";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("leetcode");
+  return posts.map((post) => ({
+    params: { slug: slugFromId(post.id) },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  title={`${post.data.title} — Aidan Sinclair`}
+  description={`Solution for ${post.data.title}`}
+>
+  <article>
+    <h1 class="post-heading">{post.data.title}</h1>
+    <div class="post-meta">
+      <span class:list={["difficulty", post.data.difficulty.toLowerCase()]}>
+        {post.data.difficulty}
+      </span>
+      <span class="dot">·</span>
+      <span>Time: {post.data.timeComplexity}</span>
+      <span class="dot">·</span>
+      <span>Space: {post.data.spaceComplexity}</span>
+      <span class="dot">·</span>
+      <a href={post.data.leetcodeUrl} target="_blank" rel="noopener" class="lc-link">LeetCode</a>
+    </div>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .post-meta {
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.8125rem;
+    color: #888;
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .dot {
+    color: #ccc;
+  }
+
+  .difficulty {
+    font-weight: 500;
+  }
+
+  .difficulty.easy {
+    color: #16a34a;
+  }
+
+  .difficulty.medium {
+    color: #d97706;
+  }
+
+  .difficulty.hard {
+    color: #dc2626;
+  }
+
+  .lc-link {
+    color: #888;
+    text-decoration: underline;
+  }
+
+  .lc-link:hover {
+    color: #1a1a1a;
+  }
+</style>
