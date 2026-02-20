@@ -85,14 +85,41 @@ const tabs = [
 
       <!-- Intro -->
       <div class="intro">
-        <p>
-          I am a Senior Software Engineer and macro researcher combining distributed systems engineering with global capital markets analysis. My work centers on policy transmission, liquidity dynamics, dealer positioning, and cross-asset capital flows.
+        <p class="hook">
+          I solve hard problems and deliver real outcomes. I've led teams through critical incidents, restored customer confidence, and thrive bridging the gap between technical systems and business outcomes.
         </p>
+
         <p>
-          Professionally, I've worked across both software and finance (see <a href="https://github.com/adssoccer1/Macro/blob/main/Resume/Aidan_Sinclair_Resume.docx.pdf" target="_blank" rel="noopener">resume</a>). I've led high-pressure outage remediation efforts, driven long-term backend modernization initiatives across teams, and partnered closely with trading and treasury stakeholders to translate technical systems into real economic outcomes.
+          I'm currently a Senior Software Engineer at <span class="company">Twilio</span>.
+          <button class="see-more" data-toggle="twilio-details">See more</button>
         </p>
+        <ul class="details" id="twilio-details" style="display:none">
+          <li>Building Twilio's next-generation AI-native communication platform, enabling AI agents to participate in multi-channel interactions with persistent conversational state and AI-to-AI routing.</li>
+          <li>Scaled TaskRouter from 50M to 120M+ monthly tasks while maintaining 99.999% uptime, powering critical emergency and healthcare services on the Flex platform.</li>
+          <li>Designed a rate-limiting solution adopted across Twilio's core library, now widely used by multiple teams and regularly consulted on two years post-launch.</li>
+          <li>Part of a leadership-initiated task force addressing a Sev0 outage in the Conversations platform; identified root causes, implemented key fixes, and helped restore customer confidence. Now driving backend modernization to scale from thousands to millions of MAUs.</li>
+          <li>Lead high-pressure on-call rotations overseeing millions of real-time customer interactions, including emergency and healthcare services.</li>
+          <li>Promoted to Senior Engineer at age 25, one of the youngest among 1,500+ engineers across Twilio.</li>
+        </ul>
+
         <p>
-          All my research is publicly time-stamped. More of my quantitative and charting research can be found in my <a href="https://github.com/adssoccer1/Macro" target="_blank" rel="noopener">GitHub</a>.
+          I have two years of finance experience, including at <span class="company">Goldman Sachs</span>
+          <button class="see-more" data-toggle="gs-details">See more</button>
+          and Fannie Mae.
+          <button class="see-more" data-toggle="fm-details">See more</button>
+        </p>
+        <ul class="details" id="gs-details" style="display:none">
+          <li>Built trading and inventory-management logic for Goldman's repo desk, systemizing validation and auto-execution of thousands of daily security movements (billions in firm inventory) directly impacting desk liquidity and P&L.</li>
+          <li>Promoted within 8 months and entrusted to design Flow Type Auto Execution Thresholds — a new control mechanism improving the safety and efficiency of repo trade validation.</li>
+          <li>Integrated Delphi with a new downstream API to connect to a new source of U.S. Treasuries held by the firm, increasing available liquidity and boosting desk P&L.</li>
+          <li>Served in high-pressure 24-hour on-call rotations supporting sub-24-hour repo allocations, resolving time-sensitive issues that directly affected Goldman's revenue.</li>
+        </ul>
+        <ul class="details" id="fm-details" style="display:none">
+          <li>Managed sensitive data to build complex financial reports used throughout all levels of the business.</li>
+        </ul>
+
+        <p class="research-intro">
+          I publish macroeconomic research, and my trades are publicly time-stamped. More of my quantitative and charting research can be found in my <a href="https://github.com/adssoccer1/Macro" target="_blank" rel="noopener">GitHub</a>.
         </p>
         <ul class="highlights">
           <li>Last year I wrote a <a href="https://github.com/adssoccer1/Macro/blob/main/Modern%20Mercantilism%20Challenge/Aidan_Sinclair_A_Reflexive_Rebalancing.pdf" target="_blank" rel="noopener">paper</a> on going long South Korean equities (KOSPI) which are now up over 75% since posting (August 2025).</li>
@@ -141,6 +168,18 @@ const tabs = [
     </div>
 
     <script>
+      document.querySelectorAll<HTMLButtonElement>(".see-more").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.dataset.toggle;
+          if (!targetId) return;
+          const details = document.getElementById(targetId);
+          if (!details) return;
+          const isHidden = details.style.display === "none";
+          details.style.display = isHidden ? "" : "none";
+          btn.textContent = isHidden ? "See less" : "See more";
+        });
+      });
+
       document.querySelectorAll<HTMLButtonElement>(".tab").forEach((btn) => {
         btn.addEventListener("click", () => {
           document.querySelectorAll<HTMLButtonElement>(".tab").forEach((b) => {
@@ -235,6 +274,52 @@ const tabs = [
 
       .intro a:hover {
         color: #1d4ed8;
+      }
+
+      .hook {
+        font-size: 1rem;
+        color: #1a1a1a;
+        font-weight: 500;
+        line-height: 1.7;
+      }
+
+      .company {
+        text-decoration: underline;
+        font-weight: 500;
+        color: #1a1a1a;
+      }
+
+      .research-intro {
+        margin-top: 1.5rem;
+      }
+
+      .see-more {
+        background: none;
+        border: none;
+        color: #2563eb;
+        font-size: 0.875rem;
+        font-family: inherit;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+      }
+
+      .see-more:hover {
+        color: #1d4ed8;
+      }
+
+      .details {
+        list-style: disc;
+        padding-left: 1.25rem;
+        margin-top: 0.25rem;
+        margin-bottom: 0.875rem;
+      }
+
+      .details li {
+        margin-bottom: 0.4rem;
+        font-size: 0.875rem;
+        color: #666;
+        line-height: 1.6;
       }
 
       .highlights {
